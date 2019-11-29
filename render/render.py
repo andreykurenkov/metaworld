@@ -1,9 +1,13 @@
 from metaworld.benchmarks import ML1
 from PIL import Image
 from mujoco_py.generated import const
+import glfw
+import gym
+from types import MethodType
 
 tasks = ML1.available_tasks()
 for task in tasks:
+    glfw.init()
     env = ML1.get_train_tasks(task)  # Create an environment with task `pick_place`
     tasks = env.sample_tasks(1)  # Sample a task (in this case, a goal variation)
     env.set_task(tasks[0])  # Set task
@@ -35,4 +39,5 @@ for task in tasks:
     rgb = env.render(mode = 'rgb_array', width=1500, height=1500)
     im = Image.fromarray(rgb)
     im.save("%s.jpg"%task)
-    env.close()
+    glfw.terminate()
+    env.viewer = None
